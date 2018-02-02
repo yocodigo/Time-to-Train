@@ -18,22 +18,19 @@
 		<div class="panel panel-info" id="top-panel">
 		  <!-- Default panel contents -->
 		  <div class="panel-heading">Current Train Schedule</div>
-		  <div class="panel-body">
-		    <table class="table">
-			  <thead>
-			    <tr>
-			      <th scope="col">Train Name</th>
-			      <th scope="col">Destination</th>
-			      <th scope="col">Frequency (min)</th>
-			      <th scope="col">Next Arrival</th>
-			      <th scope="col">Minutes Away</th>
-			    </tr>
-			  </thead>
-			  <tbody>
-			  </tbody>	
-		  </div>
-		  <!-- Table -->
-		  <table class="table"></table>
+		  	<div class="panel-body">
+			    <table class="table">
+					  <thead>
+					    <tr>
+					      <th scope="col">Train Name</th>
+					      <th scope="col">Destination</th>
+					      <th scope="col">Frequency (min)</th>
+					      <th scope="col">Next Arrival</th>
+					      <th scope="col">Minutes Away</th>
+					    </tr>
+					  </thead>
+			   		<tbody class="body"></tbody>	
+		  	</div>
 		</div>
 
 		<div class="panel panel-info">
@@ -60,6 +57,7 @@
 		  </form>
 		   <p class="submit"><a class="btn btn-primary btn-lg" href="#" role="button" id="add-train-btn">Submit</a></p>
 		</div>
+
 	</div>
 	
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -117,6 +115,8 @@
 
 	// 3. Create Firebase event for adding employee to the database and a row in the html when a user adds an entry
 	database.ref().on("child_added", function(childSnapshot, prevChildKey) {
+	
+
 	// console.log(childSnapshot.getKey())
 
 	// Store everything into a variable.
@@ -152,9 +152,10 @@
     // console.log("MINUTES TILL TRAIN: " + tMinutesTillTrain);
     // Next Train
     var nextTrain = moment().add(tMinutesTillTrain, "minutes");
-    // console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
+    arrivalTime = moment(nextTrain).format("hh:mm");
+    console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
 
-
+    $(".body").append($("<tr><td>" + trainName + "</td>" + "<td>" + trainDestination + "</td><td>" + trainFrequency + "</td><td>" + arrivalTime + "</td><td>" + tMinutesTillTrain + "</td></tr>"));
 
 
 
