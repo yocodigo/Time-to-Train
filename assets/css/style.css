@@ -1,0 +1,13 @@
+.submit, .form-group {
+	width: 1110px;
+	margin: 15px auto;
+}
+
+.jumbotron {
+	background-color: #CCE7F4;
+	color: #317db7;
+}
+
+#top-panel {
+	margin-bottom: 48px;
+}

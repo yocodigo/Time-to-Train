@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Time to Train!</title>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+</head>
+<body>
+	<div class="container">	
+		<div class="jumbotron">
+		  <h1 class="text-center">Time to Train!</h1>
+		  <p class="text-center">All Aboard!</p>
+		</div>
+	
+		<div class="panel panel-info" id="top-panel">
+		  <!-- Default panel contents -->
+		  <div class="panel-heading">Current Train Schedule</div>
+		  <div class="panel-body">
+		    <table class="table">
+			  <thead>
+			    <tr>
+			      <th scope="col">Train Name</th>
+			      <th scope="col">Destination</th>
+			      <th scope="col">Frequency (min)</th>
+			      <th scope="col">Next Arrival</th>
+			      <th scope="col">Minutes Away</th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			  </tbody>	
+		  </div>
+		  <!-- Table -->
+		  <table class="table"></table>
+		</div>
+
+		<div class="panel panel-info">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Add Train</h3>
+		  </div>
+		  <form>
+		  <div class="form-group" id="formgroup">
+		    <label for="exampleInputEmail1">Train Name</label>
+		    <input class="form-control" id="name-input" type="text">
+		  </div>
+		  <div class="form-group">
+		    <label for="exampleInput">Destination</label>
+		    <input class="form-control" id="destination-input" type="text">
+		  </div>
+		  <div class="form-group">
+		    <label for="exampleInput">First Train Time (HH:mm - military time</label>
+		    <input class="form-control" id="train-time-input" type="text">
+		  </div>
+		  <div class="form-group">
+		    <label for="exampleInput">Frequency (min)</label>
+		    <input class="form-control" id="frequency-input" type="text">
+		  </div>
+		  </form>
+		   <p class="submit"><a class="btn btn-primary btn-lg" href="#" role="button" id="add-train-btn">Submit</a></p>
+		</div>
+	</div>
+	
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- <script type="text/javascript" src="assets/javascript/javascript.js"> -->
+<script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>	
+<script>
+	var config = {
+    apiKey: "AIzaSyA4-EyESvDwtWKrPwvba1ndwarZrKgYy9M",
+    authDomain: "train-schedule-b0417.firebaseapp.com",
+    databaseURL: "https://train-schedule-b0417.firebaseio.com",
+    projectId: "train-schedule-b0417",
+    storageBucket: "",
+    messagingSenderId: "261651118064"
+  };
+  firebase.initializeApp(config);
+
+  var database = firebase.database();
+
+
+	$("#add-train-btn").on("click", function(event) {
+		event.preventDefault();
+
+		// Grabs user input
+		var trainName = $("#name-input").val().trim();
+		var trainDestination = $("#destination-input").val().trim();
+		var trainTime = moment($("#train-time-input").val().trim(), "DD/MM/YY").format("X"); //UNIX time-stamp in seconds
+		var trainFrequency = $("#frequency-input").val().trim();
+		// Creates local "temporary" object for holding employee data
+		var newTrain = {
+		name: trainName,
+		destination: trainDestination,
+		time: trainTime,
+		frequency: trainFrequency
+	};
+
+	// Uploads train data to the database
+	database.ref().push(newTrain);
+
+	// Logs everything to console
+	console.log(newTrain.name);
+	console.log(newTrain.destination);
+	console.log(newTrain.time);
+	console.log(newTrain.frequency);
+
+	// Alert
+	alert("Train successfully added");
+
+	// Clears all of the text-boxes
+	$("#name-input").val("");
+	$("#destination-input").val("");
+	$("#train-time-input").val("");
+	$("#rate-input").val("");
+	});
+
+	// 3. Create Firebase event for adding employee to the database and a row in the html when a user adds an entry
+	database.ref().on("child_added", function(childSnapshot, prevChildKey) {
+	// console.log(childSnapshot.getKey())
+
+	// Store everything into a variable.
+	var trainName = childSnapshot.val().name;
+	var trainDestination = childSnapshot.val().role;
+	var trainTime = childSnapshot.val().start;
+	var trainFrequency = childSnapshot.val().rate;
+
+	// Train Info
+	console.log(trainName);
+	console.log(trainDestination);
+	console.log(trainTime);
+	console.log(trainFrequency);
+
+	// Prettify the train start
+	var trainStartPretty = moment.unix(trainTime).format("MM/DD/YY");
+
+	// Calculate the months worked using hardcore math
+	// To calculate the months worked
+	var trainMonths = moment().diff(moment.unix(trainTime, "X"), "months");
+	console.log(empMonths);
+
+	// Calculate the total billed rate
+	var trainBilled = trainMonths * trainFrequency;
+	console.log(trainBilled);
+
+	// Add each train's data into the table
+	$("#employee-table > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDestination + "</td><td>" +
+	trainStartPretty + "</td><td>" + trainMonths + "</td><td>" + trainFrequency + "</td><td>" + trainBilled + "</td></tr>");
+
+});
+
+	</script>
+
+</body>
+</html>
