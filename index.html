@@ -6,6 +6,7 @@
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+	<script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
 </head>
 <body>
 	<div class="container">	
@@ -84,7 +85,8 @@
 		// Grabs user input
 		var trainName = $("#name-input").val().trim();
 		var trainDestination = $("#destination-input").val().trim();
-		var trainTime = moment($("#train-time-input").val().trim(), "DD/MM/YY").format("X"); //UNIX time-stamp in seconds
+		// var trainTime = moment($("#train-time-input").val().trim(), "DD/MM/YY").format("X"); //UNIX time-stamp in seconds
+		var trainTime = moment($("#train-time-input").val().trim(), "HH:mm").format("X");
 		var trainFrequency = $("#frequency-input").val().trim();
 		// Creates local "temporary" object for holding employee data
 		var newTrain = {
@@ -110,7 +112,7 @@
 	$("#name-input").val("");
 	$("#destination-input").val("");
 	$("#train-time-input").val("");
-	$("#rate-input").val("");
+	$("#frequency-input").val("");
 	});
 
 	// 3. Create Firebase event for adding employee to the database and a row in the html when a user adds an entry
@@ -119,31 +121,70 @@
 
 	// Store everything into a variable.
 	var trainName = childSnapshot.val().name;
-	var trainDestination = childSnapshot.val().role;
-	var trainTime = childSnapshot.val().start;
-	var trainFrequency = childSnapshot.val().rate;
+	var trainDestination = childSnapshot.val().destination;
+	var trainTime = childSnapshot.val().time;
+	var trainFrequency = childSnapshot.val().frequency;
 
 	// Train Info
-	console.log(trainName);
-	console.log(trainDestination);
-	console.log(trainTime);
+	// console.log(trainName);
+	// console.log(trainDestination);
+	// console.log("This is the first train: " + trainTime);
 	console.log(trainFrequency);
 
-	// Prettify the train start
-	var trainStartPretty = moment.unix(trainTime).format("MM/DD/YY");
+	// Assumptions
+    // var tFrequency = 3;
+    // Time is 3:30 AM
+    // var firstTime = "03:30";
+    // First Time (pushed back 1 year to make sure it comes before current time)
+    var firstTimeConverted = moment(trainTime, "hh:mm").subtract(1, "years");
+    // console.log(firstTimeConverted);
+    // Current Time
+    var currentTime = moment();
+    // console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
+    // Difference between the times
+    var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
+    // console.log("DIFFERENCE IN TIME: " + diffTime);
+    // Time apart (remainder)
+    var tRemainder = diffTime % trainFrequency;
+    // console.log(tRemainder);
+    // Minute Until Train
+    var tMinutesTillTrain = trainFrequency - tRemainder;
+    // console.log("MINUTES TILL TRAIN: " + tMinutesTillTrain);
+    // Next Train
+    var nextTrain = moment().add(tMinutesTillTrain, "minutes");
+    // console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
 
-	// Calculate the months worked using hardcore math
-	// To calculate the months worked
-	var trainMonths = moment().diff(moment.unix(trainTime, "X"), "months");
-	console.log(empMonths);
 
-	// Calculate the total billed rate
-	var trainBilled = trainMonths * trainFrequency;
-	console.log(trainBilled);
 
-	// Add each train's data into the table
-	$("#employee-table > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDestination + "</td><td>" +
-	trainStartPretty + "</td><td>" + trainMonths + "</td><td>" + trainFrequency + "</td><td>" + trainBilled + "</td></tr>");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	// // Prettify the train start
+	// var trainStartPretty = moment.unix(trainTime).format("HH:mm");
+
+	// // Calculate the months worked using hardcore math
+	// // To calculate the months worked
+	// var trainMonths = moment().diff(moment.unix(trainTime, "X"), "Minutes Away");
+	// console.log(empMonths);
+
+	// // Calculate the total billed rate
+	// var trainBilled = trainMonths * trainFrequency;
+	// console.log(trainBilled);
+
+	// // Add each train's data into the table
+	// $("#employee-table > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDestination + "</td><td>" +
+	// trainStartPretty + "</td><td>" + trainMonths + "</td><td>" + trainFrequency + "</td><td>" + trainBilled + "</td></tr>");
 
 });
 
