@@ -1,3 +1,7 @@
+.container {
+	margin: 30px auto;
+}
+
 .submit, .form-group {
 	width: 1110px;
 	margin: 15px auto;
@@ -6,8 +10,9 @@
 .jumbotron {
 	background-color: #CCE7F4;
 	color: #317db7;
+	margin-bottom: 30px;
 }
 
 #top-panel {
-	margin-bottom: 48px;
+	margin-bottom: 30px;
 }
