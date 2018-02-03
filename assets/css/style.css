@@ -1,3 +1,7 @@
+body {
+	background-color: #c0c3c6;
+}
+
 .container {
 	margin: 30px auto;
 }
@@ -8,11 +12,17 @@
 }
 
 .jumbotron {
-	background-color: #CCE7F4;
+	background: #ffffff;
+  	background: radial-gradient(#f4f7f9,#c5e6f7);
 	color: #317db7;
 	margin-bottom: 30px;
 }
 
 #top-panel {
 	margin-bottom: 30px;
+}
+
+.panel-gradient {
+	background: #648880;
+    background: linear-gradient(to right, #f6f1d3, #648880 85%, #293f50);
 }
